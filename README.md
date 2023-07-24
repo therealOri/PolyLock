@@ -27,6 +27,13 @@ python polyLock.py
 > If you don't have `virtualenv`, you can install it via "pip". `pip install virtualenv`.
 __ __
 
+<br>
+<br>
+
+# ⚠️ Warning 
+I have not tested ANY of the code on a windows system so I have no idea what works and what doesn't..(yet). If you are using windows then please feel free to test it out and get back to me with any issues that occur by making an [issue](https://github.com/therealOri/PolyLock/issues/new/choose) report. Please and thanks!
+__ __
+
 <br />
 <br />
 <br />
