@@ -37,8 +37,7 @@ def compile_code(file_path):
     if beaupy.confirm("Want to add an icon?"):
         icon_file = beaupy.prompt("Path to the picture you want to use as an icon.")
         if not icon_file:
-            clear()
-            exit()
+            icon_arg=''
         icon_file = icon_file.replace('\\', '').strip()
         if sys.platform == 'win32':
             icon_arg = '--windows-icon-from-ico=%s' % icon_file
@@ -101,6 +100,7 @@ locked_data = "{enc_file_data}"
 
 
 chaes = Chaes()
+chase.clear()
 dKey = beaupy.prompt("Encryption Key")
 if not dKey:
     chaes.clear()
