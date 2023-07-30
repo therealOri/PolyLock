@@ -964,11 +964,6 @@ def main():
     try:
         with open(file_path, mode='rb') as f:
             script = f.read().decode('utf-8')
-        if platform.system() == 'Windows':
-            filename = file_path.split('\\')[-1]
-        if platform.system() == 'Linux' or platform.system() == 'Darwin':
-            filename = file_path.split('/')[-1]
-
     except:
         input(f" {Col.Symbol('!', light, dark)} {Col.light_red}Invalid file!{Col.reset}")
         exit()
@@ -988,7 +983,7 @@ def main():
     script = Hype.content
     now = round(time() - now, 2)
 
-    with open(filename, mode='w') as f:
+    with open(file_path, mode='w') as f:
         f.write(script)
 
     #Patch for strings being to long and preventing a weird issue where nothing would happen when running code. (Even after compiling with nuitka)
@@ -996,8 +991,8 @@ def main():
     # Set to "True" if you want to use this patch.
     patch=False
     if patch == True:
-        chunk_size = 64
-        with open(filename, 'rb') as rb:
+        chunk_size = 256
+        with open(file_path, 'rb') as rb:
             obf_code = rb.read()
             encoded_obf_code = base64.b64encode(obf_code)
 
@@ -1016,7 +1011,7 @@ more_stuff = base64.b64decode(full_stuff_bytes).decode()
 exec(more_stuff)
 '''
         code2 = code2.lstrip()
-        with open(filename, 'w') as wf:
+        with open(file_path, 'w') as wf:
             wf.write(code2)
 
     print('\n')
