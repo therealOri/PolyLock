@@ -27,6 +27,17 @@ __ __
 <br>
 <br>
 
+# Updates
+> 07/30/23
+
+Updated:
+- New way of handling the storage of the encrypted and obfuscated code data. You can now use pastebin to store the data and read from when executing. This will make the final result Waaaaaaaaayyyyyyyy smaller and faster to compile. Or you can stick with not using pastebin and keep everything in one file, but with the new method of using a list to store the data, as to prevent strings from being to big...however the downside is the bigger the list, the more memory it will need to use. (That's why I added the use of pastebin)
+> You can also choose to use your own account or just post to pastebin as a guest. There are upload limits on accounts per 24hrs so try not to upload and save to pastebin to frequently per day. "`Guests` can create up to `10` new pastes per `24 hours`, `Free` members can create up to `20` new pastes per `24 hours`, and `PRO` members can create up to `250` new pastes per `24 hours`."
+__ __
+
+<br>
+<br>
+
 # Installation
 ```
 git clone https://github.com/therealOri/PolyLock.git
