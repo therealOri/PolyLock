@@ -152,7 +152,7 @@ exec(unlocked_data)
                 if beaupy.confirm("(!Warning!) - If you generate a new key, your old key will no longer be valid.\nDo you already have your pastebin USER key?\n\n"):
                     api_user_key = beaupy.prompt("Pastebin USER key.")
                 else:
-                    print('Login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api.\n\n')
+                    print('Login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api#9.\n\n')
                     pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
                     pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
 
