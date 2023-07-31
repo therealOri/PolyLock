@@ -3,6 +3,7 @@ import os
 import sys
 import beaupy
 import base64
+import requests
 import subprocess
 from Chaeslib import Chaes
 
@@ -37,7 +38,7 @@ def compile_code(file_path):
     if beaupy.confirm("Want to add an icon?"):
         icon_file = beaupy.prompt("Path to the picture you want to use as an icon.")
         if not icon_file:
-            icon_arg=''
+            icon_arg = ''
         icon_file = icon_file.replace('\\', '').strip()
         if sys.platform == 'win32':
             icon_arg = '--windows-icon-from-ico=%s' % icon_file
@@ -100,7 +101,7 @@ locked_data = "{enc_file_data}"
 
 
 chaes = Chaes()
-chase.clear()
+chaes.clear()
 dKey = beaupy.prompt("Encryption Key")
 if not dKey:
     chaes.clear()
@@ -144,30 +145,94 @@ exec(unlocked_data)
                 exit()
 
         clear()
-        chunk_size = 64
-        with open(file_path, 'rb') as rb:
-            obf_code = rb.read()
-            encoded_obf_code = base64.b64encode(obf_code)
+        if beaupy.confirm("Do you want to use pastebin for storage?"):
+            api_dev_key = beaupy.prompt('Pastebin DEV key.')
 
-        #NOTE
-        #The following code here is kind of a patch to not only make compiling a little faster but to help hyperion when obfuscating and allowing Nuitka to compile and run the code with little to no issues. Instead of having python break because strings are to long, idk.
-        chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
-        code2 = '''
-import base64
-stuff = []
+            if beaupy.confirm("Want to post to YOUR pastebin account?"):
+                if beaupy.confirm("(!Warning!) - If you generate a new key, your old key will no longer be valid.\nDo you already have your pastebin USER key?\n\n"):
+                    api_user_key = beaupy.prompt("Pastebin USER key.")
+                else:
+                    print('Login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api.\n\n')
+                    pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
+                    pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
+
+                    api_data_pkg = {'api_dev_key':api_dev_key,
+                            'api_user_name':pbin_username,
+                            'api_user_password':pbin_password
+                    }
+                    api_user_key = requests.post('https://pastebin.com/api/api_login.php', data=api_data_pkg).text
+                    clear()
+                    input(f'Pastebin User Key - (Save me & Do not share): "{api_user_key}"\n\nPress "enter" to contine...')
+                    clear()
+            else:
+                api_user_key=''
+                #post to pastebin as guest
+
+            chunk_size = 256 #bigger the file, bigger the chunk size...until it breaks because strings are to long or something..idk
+            with open(file_path, 'rb') as rb:
+                obf_code = rb.read()
+                encoded_obf_code = base64.b64encode(obf_code)
+
+            chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
+            stuff=[]
+            for i, chunk in enumerate(chunks):
+                stuff.append(f"{chunk.decode()}")
+
+            api_data = {'api_dev_key':api_dev_key,
+                    'api_option':'paste',
+                    'api_user_key':api_user_key,
+                    'api_paste_code':f'{stuff}'
+            }
+
+            api_paste_code = requests.post('https://pastebin.com/api/api_post.php', data=api_data).text
+            paste_code_id = api_paste_code.split('/')[-1]
+
+            code2 = f'''import base64
+import requests
+
+api_url = 'https://pastebin.com/raw/{paste_code_id}'
+try:
+    response = requests.get(api_url)
+    status_code = response.status_code
+
+    if status_code == 200:
+        full_stuff_paste = response.text.splitlines()
+        full_stuff_paste = list(full_stuff_paste[0])
+
+        full_stuff = "".join(full_stuff_paste)
+        full_stuff_bytes = full_stuff.encode()
+        more_stuff = base64.b64decode(full_stuff_bytes).decode()
+        exec(more_stuff)
+    else:
+        print(f"Invalid response code: {{status_code}}")
+
+except Exception as e:
+    print(f"Error with request: {{e}}")
 '''
-        for i, chunk in enumerate(chunks):
-            code2 += f'stuff.append("{chunk.decode()}")\n'
+            with open(file_path, 'w') as wf:
+                wf.write(code2)
 
-        code2 += '''
+        else:
+            #64
+            chunk_size = 256
+            with open(file_path, 'rb') as rb:
+                obf_code = rb.read()
+                encoded_obf_code = base64.b64encode(obf_code)
+
+            chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
+            stuff=[]
+            for i, chunk in enumerate(chunks):
+                stuff.append(f"{chunk.decode()}")
+
+            code2 = f'''import base64
+stuff = {stuff}
 full_stuff = "".join(stuff)
 full_stuff_bytes = full_stuff.encode()
 more_stuff = base64.b64decode(full_stuff_bytes).decode()
 exec(more_stuff)
 '''
-        code2 = code2.lstrip()
-        with open(file_path, 'w') as wf:
-            wf.write(code2)
+            with open(file_path, 'w') as wf:
+                wf.write(code2)
 
 
         if beaupy.confirm("Do you want to compile the code to an executable?"):
