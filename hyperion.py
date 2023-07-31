@@ -997,20 +997,17 @@ def main():
             encoded_obf_code = base64.b64encode(obf_code)
 
         chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
-        code2 = '''
-import base64
-stuff = []
-'''
+        stuff=[]
         for i, chunk in enumerate(chunks):
-            code2 += f'stuff.append("{chunk.decode()}")\n'
+            stuff.append(f"{chunk.decode()}")
 
-        code2 += '''
+        code2 = f'''import base64
+stuff = {stuff}
 full_stuff = "".join(stuff)
 full_stuff_bytes = full_stuff.encode()
 more_stuff = base64.b64decode(full_stuff_bytes).decode()
 exec(more_stuff)
 '''
-        code2 = code2.lstrip()
         with open(file_path, 'w') as wf:
             wf.write(code2)
 
