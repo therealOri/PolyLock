@@ -2,3 +2,4 @@ beaupy
 chaeslib
 pystyle
 nuitka
+requests
