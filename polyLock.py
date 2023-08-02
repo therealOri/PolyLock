@@ -110,7 +110,7 @@ def pastebin_login(api_dev_key):
         return api_user_key
     else:
         clear()
-        input(f'Unable to login...bad request.\nError code: "{api_user_key.status_code}"\nPosting paste as guest instead.\n\nPress "enter" to contine...')
+        input(f'Unable to login...\nError code: "{api_user_key.status_code}"\nPosting paste as guest instead.\n\nPress "enter" to contine...')
         clear()
         api_user_key=''
         return api_user_key
