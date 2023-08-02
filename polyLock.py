@@ -69,11 +69,10 @@ def check_pastebin_key(dev_key, user_key):
     }
 
     response = requests.post(url, data=data)
-    paste_key = response.text
-    paste_code_id = paste_key.split('/')[-1]
-
     if response.status_code == 200:
         valid = True
+        paste_key = response.text
+        paste_code_id = paste_key.split('/')[-1]
     else:
         valid = False
 
