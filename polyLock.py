@@ -58,6 +58,64 @@ def compile_code(file_path):
 
 
 
+def check_pastebin_key(dev_key, user_key):
+    url = 'https://pastebin.com/api/api_post.php'
+    data = {
+        'api_dev_key': dev_key,
+        'api_user_key': user_key,
+        'api_option': 'paste',
+        'api_paste_code': 'user_key_validation_test',
+        'api_paste_name': 'user_key_validation_test'
+    }
+
+    response = requests.post(url, data=data)
+    paste_key = response.text
+    paste_code_id = paste_key.split('/')[-1]
+
+    if response.status_code == 200:
+        valid = True
+    else:
+        valid = False
+
+
+    if valid == True:
+        data = {
+            'api_dev_key': dev_key,
+            'api_user_key': user_key,
+            'api_option': 'delete',
+            'api_paste_key': paste_code_id
+        }
+        requests.post(url, data=data)
+
+    return valid
+
+
+
+
+def pastebin_login(api_dev_key):
+    print('Please login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api#9\n\n')
+    pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
+    pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
+
+    api_data_pkg = {'api_dev_key':api_dev_key,
+            'api_user_name':pbin_username,
+            'api_user_password':pbin_password
+    }
+    response = requests.post('https://pastebin.com/api/api_login.php', data=api_data_pkg)
+    api_user_key = response.text
+    if response.status_code == 200:
+        clear()
+        input(f'Pastebin User Key - (Save me & Do not share): "{api_user_key}"\n\nPress "enter" to contine...')
+        clear()
+        return api_user_key
+    else:
+        clear()
+        input(f'Unable to login...bad request.\nError code: "{api_user_key.status_code}"\nPosting paste as guest instead.\n\nPress "enter" to contine...')
+        clear()
+        api_user_key=''
+        return api_user_key
+
+
 
 # The Goods
 def main():
@@ -145,25 +203,20 @@ exec(unlocked_data)
                 exit()
 
         clear()
+        #gotta love adding logic :')
         if beaupy.confirm("Do you want to use pastebin for storage?"):
             api_dev_key = beaupy.prompt('Pastebin DEV key.')
 
             if beaupy.confirm("Want to post to YOUR pastebin account?"):
                 if beaupy.confirm("(!Warning!) - If you generate a new key, your old key will no longer be valid.\nDo you already have your pastebin USER key?\n\n"):
                     api_user_key = beaupy.prompt("Pastebin USER key.")
-                else:
-                    print('Login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api#9.\n\n')
-                    pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
-                    pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
 
-                    api_data_pkg = {'api_dev_key':api_dev_key,
-                            'api_user_name':pbin_username,
-                            'api_user_password':pbin_password
-                    }
-                    api_user_key = requests.post('https://pastebin.com/api/api_login.php', data=api_data_pkg).text
-                    clear()
-                    input(f'Pastebin User Key - (Save me & Do not share): "{api_user_key}"\n\nPress "enter" to contine...')
-                    clear()
+                    check = check_pastebin_key(api_dev_key, api_user_key)
+                    if check == False:
+                        print("Invalid api_user_key...")
+                        api_user_key = pastebin_login(api_dev_key)
+                else:
+                    api_user_key = pastebin_login(api_dev_key)
             else:
                 api_user_key=''
                 #post to pastebin as guest
