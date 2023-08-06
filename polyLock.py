@@ -7,12 +7,34 @@ import requests
 import subprocess
 from Chaeslib import Chaes
 from beaupy.spinners import *
+from pystyle import Colors, Colorate
 
 
 
 # Helper Functions
 def clear():
     os.system("clear||cls")
+
+
+def banner():
+    banner = """
+     ██████╗  ██████╗ ██╗  ██╗   ██╗██╗      ██████╗  ██████╗██╗  ██╗
+     ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██║     ██╔═══██╗██╔════╝██║ ██╔╝
+     ██████╔╝██║   ██║██║   ╚████╔╝ ██║     ██║   ██║██║     █████╔╝
+     ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██║     ██║   ██║██║     ██╔═██╗
+     ██║     ╚██████╔╝███████╗██║   ███████╗╚██████╔╝╚██████╗██║  ██╗
+     ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝
+
+
+     Made by Ori#6338 | @therealOri_ | https://github.com/therealOri
+
+
+
+    """
+    colored_banner = Colorate.Horizontal(Colors.purple_to_blue, banner, 1)
+    return print(colored_banner)
+
+
 
 
 #idk if this will conflict with the already existing "exit()" python uses by default.
@@ -120,6 +142,21 @@ def pastebin_login(api_dev_key):
 
 
 
+
+
+def check_file(file_path):
+    if not os.path.exists(file_path):
+        return False
+
+    if not file_path.endswith('.py'):
+        return False
+
+    return True
+
+
+
+
+
 # The Goods
 def main():
     file_path = beaupy.prompt("Path to the file you want to obfuscate/lock.")
@@ -128,7 +165,8 @@ def main():
         exit()
 
     file_path = file_path.replace('\\', '').strip()
-    if not file_path.endswith('.py') and os.path.isfile(file_path):
+    check = check_file(file_path)
+    if check == False:
         clear()
         exit(msg="Invalid file type or file doesn't exist...")
     else:
@@ -328,4 +366,5 @@ exec(more_stuff)
 
 if __name__ == '__main__':
     clear()
+    banner()
     main()
