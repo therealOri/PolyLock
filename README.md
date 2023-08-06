@@ -31,6 +31,8 @@ __ __
 > 08/06/23
 - In the event of polylock not being able to make a request to pastebin, it will default to writing to local file instead.
 - Added a spinner to take up empty space when validating pastebin user keys. (To give you something to look at...like a loading bar, etc.)
+- Added a banner/logo when the script it ran/started.
+- Fixed a bug where the checking of the file you want to encrypt and obfuscate to see if it exists and ends with ".py" wasn't working. It now works.
 __ __
 
 <br>
