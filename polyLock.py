@@ -6,6 +6,7 @@ import base64
 import requests
 import subprocess
 from Chaeslib import Chaes
+from beaupy.spinners import *
 
 
 
@@ -59,6 +60,8 @@ def compile_code(file_path):
 
 
 def check_pastebin_key(dev_key, user_key):
+    spinner = Spinner(ARC, "Validating user_key...")
+    spinner.start()
     url = 'https://pastebin.com/api/api_post.php'
     data = {
         'api_dev_key': dev_key,
@@ -86,6 +89,7 @@ def check_pastebin_key(dev_key, user_key):
         }
         requests.post(url, data=data)
 
+    spinner.stop()
     return valid
 
 
@@ -197,7 +201,7 @@ exec(unlocked_data)
                 subprocess.check_call([sys.executable, 'hyperion.py'])
             except Exception as e2:
                 clear()
-                input(f'An error has occured while trying to obfuscate code. Ssomething may have gone wrong while obfuscating or running the command "python hyperion.py" using subprocess.\n\nError: {e2}\n\nPress "enter" to exit...')
+                input(f'An error has occured while trying to obfuscate code. Something may have gone wrong while obfuscating or running the command "python hyperion.py" using subprocess.\n\nError: {e2}\n\nPress "enter" to exit...')
                 clear()
                 exit()
 
@@ -236,7 +240,8 @@ exec(unlocked_data)
                     'api_paste_code':f'{stuff}'
             }
 
-            api_paste_code = requests.post('https://pastebin.com/api/api_post.php', data=api_data).text
+            response = requests.post('https://pastebin.com/api/api_post.php', data=api_data)
+            api_paste_code = response.text
             paste_code_id = api_paste_code.split('/')[-1]
 
             code2 = f'''import base64
@@ -261,8 +266,24 @@ try:
 except Exception as e:
     print(f"Error with request: {{e}}")
 '''
-            with open(file_path, 'w') as wf:
-                wf.write(code2)
+
+            if response.status_code == 200:
+                with open(file_path, 'w') as wf:
+                    wf.write(code2)
+            else:
+                clear()
+                input('Unable to make a request to pastebin, defaulting to writing to file instead.\n\nPress "enter" to continue...')
+                clear()
+                code2 = f'''import base64
+stuff = {stuff}
+full_stuff = "".join(stuff)
+full_stuff_bytes = full_stuff.encode()
+more_stuff = base64.b64decode(full_stuff_bytes).decode()
+exec(more_stuff)
+'''
+                with open(file_path, 'w') as wf:
+                    wf.write(code2)
+
 
         else:
             #64
