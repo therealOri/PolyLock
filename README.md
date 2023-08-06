@@ -28,6 +28,14 @@ __ __
 <br>
 
 # Updates
+> 08/06/23
+- In the event of polylock not being able to make a request to pastebin, it will default to writing to local file instead.
+- Added a spinner to take up empty space when validating pastebin user keys. (To give you something to look at...like a loading bar, etc.)
+__ __
+
+<br>
+<br>
+
 > 08/01/23
 - Added more logic for handling user keys and adding more if checks. Basically just handling what would happen if request.status_code's happen to be anything other than 200 and polylock is unable to make a successful request.
 - Implemented api_user_key validation to check and see if the key given is valid and if it isn't, allow the user to make a key/new key. And if the user can't make a new key or log in to pastebin, polylock will just post/paste as guest.
