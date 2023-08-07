@@ -37,15 +37,6 @@ def banner():
 
 
 
-#idk if this will conflict with the already existing "exit()" python uses by default.
-#sys.exit() is to allow the compiled executable to work on windows as the normal "exit()" doesn't want to work.'
-def exit(msg=None):
-    if not msg or msg == None:
-        sys.exit()
-    else:
-        sys.exit(msg)
-
-
 def compile_code(file_path):
     result_code = subprocess.run(['nuitka3', '--version'])
     if result_code.returncode != 0:
