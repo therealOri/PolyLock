@@ -11,7 +11,7 @@ PolyLock is a python3 code obfuscator and encryptor, helping you keep your code 
 
 You can provide any .py file you like, PolyLock will then encrypt the file's data and then obfuscate it. You will then be asked if you want to compile the .py to an executable and if you say yes, you will be left with either a linux executable binary, a windows .exe, or whatever you get on Mac OS. Making sure your code is secure and obfuscated. You can also allow the ussage of pastebin to store the encrypted and obfuscated code, keeping the final result small. (less than 25 lines)
 
-If you like what I have made, please feel free to leave a star! :star: and share this project with your friends and communities!
+If you like what I have made, please leave a star! :star: and share this project with your friends and communities!
 __ __
 
 <br>
