@@ -32,6 +32,7 @@ __ __
 > 08/24/23
 - Re-worked the handling of the encrypted data so it will be stored locally, instead of having to trust the security of another platform. This will also allow you to use larger files like 100kb+ for example, and not be impacted by slow compile times or slow obfuscation times. (hopefully)
 - Changed the obfuscation method from Hyperion to Specter.
+- Encrypted file data will now be written to a `part.py` file to which it will be cythonized. (basically a shareable library file). 
 __ __
 
 <br>
