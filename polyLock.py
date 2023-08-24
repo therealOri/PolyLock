@@ -3,12 +3,15 @@ import os
 import sys
 import beaupy
 import base64
+import random
+import shutil
 import requests
 import subprocess
 from Chaeslib import Chaes
 from beaupy.spinners import *
 from pystyle import Colors, Colorate
-
+import binascii
+import lzma
 
 
 # Helper Functions
@@ -103,13 +106,13 @@ def check_pastebin_key(dev_key, user_key):
         requests.post(url, data=data)
 
     spinner.stop()
-    return valid
+    return valid, response
 
 
 
 
 def pastebin_login(api_dev_key):
-    print('Please login to your account using your username and password.\nWhy do you need to login?: https://pastebin.com/doc_api#9\n\n')
+    print('Please login to your account using your username and password.  |  Why do you need to login?: https://pastebin.com/doc_api#9\n\n')
     pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
     pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
 
@@ -146,6 +149,45 @@ def check_file(file_path):
 
 
 
+def local_store(stuff, file_path):
+    code2 = f'''import binascii
+
+stuff = {stuff}
+
+full_stuff = "".join(stuff)
+full_stuff_bytes = full_stuff.encode()
+more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
+exec(more_stuff)
+'''
+    with open(file_path, 'w') as wf:
+        wf.write(code2)
+
+
+
+def clean_up(file_name):
+    clear()
+    cleaning_spinner = Spinner(ARC, "Cleaning Up...")
+    cleaning_spinner.start()
+    os.remove(f'{file_name}.py')
+    os.remove(f'{file_name}.c')
+    shutil.rmtree('build')
+
+    if sys.platform == 'win32':
+        ext = '.pyd'
+    else:
+        ext = '.so'
+
+    for filename in os.listdir('.'): # current directory/folder
+        if not filename.endswith(ext):
+            pass
+        else:
+            new_name = f'{file_name}{ext}'
+            os.rename(filename, new_name)
+            break
+    cleaning_spinner.stop()
+
+
+
 
 
 # The Goods
@@ -177,18 +219,58 @@ def main():
         input(f'Save this key so you can decrypt later: {master_key}\n\nPress "enter" to contine...')
         clear()
 
+        chunk_size = 128
         with open(file_path, 'rb') as rf:
             file_data = rf.read()
 
         enc_file_data = chaes.encrypt(file_data, eKey)
+        enc_chunks = [enc_file_data[i:i+chunk_size] for i in range(0, len(enc_file_data), chunk_size)]
+        enc_stuff=[]
+        for i, chunk in enumerate(enc_chunks):
+            enc_stuff.append(f"{chunk}")
+
+
+        file_name='part.py'
+        if os.path.isfile(file_name):
+            count = 1
+            while True:
+                file_name = f'part_{count}.py'
+                if os.path.isfile(file_name):
+                    count += 1
+                    continue
+                else:
+                    break
+
+
+        with open(file_name, 'w') as fw:
+            code_part = f'''locked_data = "{enc_stuff}"'''
+            fw.write(code_part)
+
+        with open('setup.py', 'w') as fws:
+            setup_code=f'''from distutils.core import setup
+from Cython.Build import cythonize
+
+setup(
+    ext_modules = cythonize("{file_name}")
+)
+'''
+            fws.write(setup_code)
+
+        base_file_name = os.path.splitext(file_name)[0]
+        subprocess.check_call([sys.executable, 'setup.py', 'build_ext', '--inplace'])
+
 
         code = f'''import base64
 from Chaeslib import Chaes
 import beaupy
 import sys
+import ast
+import {base_file_name}
 
-locked_data = "{enc_file_data}"
 
+data = {base_file_name}.locked_data
+data_lst = ast.literal_eval(data)
+built_stuff = "".join(data_lst)
 
 chaes = Chaes()
 chaes.clear()
@@ -198,7 +280,7 @@ if not dKey:
     sys.exit()
 
 try:
-    enc_data = chaes.hex_to_base64(locked_data)
+    enc_data = chaes.hex_to_base64(built_stuff)
     json_input = base64.b64decode(enc_data)
     key_and_salt = dKey.split(":")
     salt_1 = key_and_salt[1]
@@ -225,14 +307,17 @@ exec(unlocked_data)
         with open(file_path, 'w') as wf:
             wf.write(code)
 
+        clean_up(base_file_name)
+        clear()
         if beaupy.confirm("Do you want to obfuscate code?"):
             try:
-                subprocess.check_call([sys.executable, 'hyperion.py'])
+                subprocess.check_call([sys.executable, 'specter.py'])
             except Exception as e2:
                 clear()
                 input(f'An error has occured while trying to obfuscate code. Something may have gone wrong while obfuscating or running the command "python hyperion.py" using subprocess.\n\nError: {e2}\n\nPress "enter" to exit...')
                 clear()
                 exit()
+
 
         clear()
         #gotta love adding logic :')
@@ -244,8 +329,8 @@ exec(unlocked_data)
                     api_user_key = beaupy.prompt("Pastebin USER key.")
 
                     check = check_pastebin_key(api_dev_key, api_user_key)
-                    if check == False:
-                        print("Invalid api_user_key...")
+                    if check[0] == False:
+                        print(f"An error has occured...\nError: {check[1].text}  | Code: {check[1].status_code}")
                         api_user_key = pastebin_login(api_dev_key)
                 else:
                     api_user_key = pastebin_login(api_dev_key)
@@ -253,88 +338,107 @@ exec(unlocked_data)
                 api_user_key=''
                 #post to pastebin as guest
 
-            chunk_size = 256 #bigger the file, bigger the chunk size...until it breaks because strings are to long or something..idk
+
+
+            chunk_size = 128
             with open(file_path, 'rb') as rb:
                 obf_code = rb.read()
-                encoded_obf_code = base64.b64encode(obf_code)
+                encoded_obf_code = binascii.hexlify(obf_code)
 
             chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
             stuff=[]
             for i, chunk in enumerate(chunks):
                 stuff.append(f"{chunk.decode()}")
 
-            api_data = {'api_dev_key':api_dev_key,
-                    'api_option':'paste',
-                    'api_user_key':api_user_key,
-                    'api_paste_code':f'{stuff}'
-            }
+            stuff = f'{stuff}'
+            N = 2
+            part_size = len(stuff) // N
+            parts = []
 
-            response = requests.post('https://pastebin.com/api/api_post.php', data=api_data)
-            api_paste_code = response.text
-            paste_code_id = api_paste_code.split('/')[-1]
+            for i in range(N):
+                start = i * part_size
+                end = (i+1) * part_size if i < N-1 else len(stuff)
+                parts.append(stuff[start:end])
 
-            code2 = f'''import base64
+            # Upload each part and get paste IDs
+            letters = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+            digits = "012345678901234567890123456789"
+            paste_names = [''.join(random.choices(letters + digits, k=10)) for i in range(5)]
+            paste_ids = []
+
+            paste_spinner = Spinner(ARC, "Storing code in pastebin...")
+            paste_spinner.start()
+            for part, name in zip(parts, paste_names):
+                api_data = {'api_dev_key':api_dev_key,
+                        'api_option':'paste',
+                        'api_user_key':api_user_key,
+                        'api_paste_code':part,
+                        'api_paste_name': name
+                }
+                response = requests.post('https://pastebin.com/api/api_post.php', data=api_data)
+                paste_ids.append(response.text.split('/')[-1])
+
+
+
+            code2 = f'''import binascii
 import requests
+import ast
+from beaupy.spinners import *
 
-api_url = 'https://pastebin.com/raw/{paste_code_id}'
+part_url_1 = 'https://pastebin.com/raw/{paste_ids[0]}'
+part_url_2 = 'https://pastebin.com/raw/{paste_ids[1]}'
+
+
+spinner = Spinner(ARC, "Building code...")
+spinner.start()
 try:
-    response = requests.get(api_url)
-    status_code = response.status_code
+    full_stuff = ""
+    for url in [part_url_1, part_url_2]:
+        response = requests.get(url)
+        status_code = response.status_code
 
-    if status_code == 200:
-        full_stuff_paste = response.text.splitlines()
-        full_stuff_paste = list(full_stuff_paste[0])
+        if status_code == 200:
+            full_stuff += response.text
+        else:
+            spinner.stop()
+            quit(f"Error fetching {{url}} | Status: {{response.status_code}}")
 
-        full_stuff = "".join(full_stuff_paste)
-        full_stuff_bytes = full_stuff.encode()
-        more_stuff = base64.b64decode(full_stuff_bytes).decode()
-        exec(more_stuff)
-    else:
-        print(f"Invalid response code: {{status_code}}")
+
+    full_stuff_lst = ast.literal_eval(full_stuff)
+    full_stuff = "".join(full_stuff_lst)
+    full_stuff_bytes = full_stuff.encode()
+    more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
+
+    spinner.stop()
+    exec(more_stuff)
 
 except Exception as e:
+    spinner.stop()
     print(f"Error with request: {{e}}")
 '''
 
             if response.status_code == 200:
                 with open(file_path, 'w') as wf:
                     wf.write(code2)
+                paste_spinner.stop()
             else:
+                paste_spinner.stop()
                 clear()
-                input('Unable to make a request to pastebin, defaulting to writing to file instead.\n\nPress "enter" to continue...')
+                input(f'Unable to make a request to pastebin with error: [{response.text}  |  {response.status_code}], defaulting to writing to file instead.\n\nPress "enter" to continue...')
                 clear()
-                code2 = f'''import base64
-stuff = {stuff}
-full_stuff = "".join(stuff)
-full_stuff_bytes = full_stuff.encode()
-more_stuff = base64.b64decode(full_stuff_bytes).decode()
-exec(more_stuff)
-'''
-                with open(file_path, 'w') as wf:
-                    wf.write(code2)
-
+                local_store(stuff, file_path)
 
         else:
-            #64
-            chunk_size = 256
+            chunk_size = 128
             with open(file_path, 'rb') as rb:
                 obf_code = rb.read()
-                encoded_obf_code = base64.b64encode(obf_code)
+                encoded_obf_code = binascii.hexlify(obf_code)
 
             chunks = [encoded_obf_code[i:i+chunk_size] for i in range(0, len(encoded_obf_code), chunk_size)]
             stuff=[]
             for i, chunk in enumerate(chunks):
                 stuff.append(f"{chunk.decode()}")
-
-            code2 = f'''import base64
-stuff = {stuff}
-full_stuff = "".join(stuff)
-full_stuff_bytes = full_stuff.encode()
-more_stuff = base64.b64decode(full_stuff_bytes).decode()
-exec(more_stuff)
-'''
-            with open(file_path, 'w') as wf:
-                wf.write(code2)
+            local_store(stuff, file_path)
 
 
         if beaupy.confirm("Do you want to compile the code to an executable?"):
