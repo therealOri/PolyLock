@@ -3,3 +3,4 @@ chaeslib
 pystyle
 nuitka
 requests
+cython
