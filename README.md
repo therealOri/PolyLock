@@ -9,7 +9,7 @@ PolyLock is a python3 code obfuscator and encryptor, helping you keep your code 
 - Code compilation is handled by [Nuitka](https://github.com/Nuitka/Nuitka/).
 
 
-You can provide any .py file you like, PolyLock will then encrypt the file's data and then obfuscate it. You will then be asked if you want to compile the .py to an executable and if you say yes, you will be left with either a linux executable binary, a windows .exe, or whatever you get on Mac OS. Making sure your code is secure and obfuscated. You can also allow the ussage of pastebin to store the encrypted and obfuscated code, keeping the final result small. (less than 25 lines)
+You can provide any .py file you like, PolyLock will then encrypt the file's data and then obfuscate it. You will then be asked if you want to compile the .py to an executable and if you say yes, you will be left with either an executable binary or a windows .exe file. Making sure your code is secure and obfuscated. You can also allow the ussage of pastebin to store parts of the obfuscated code, keeping the final result small.
 
 If you like what I have made, please leave a star! :star: and share this project with your friends and communities!
 __ __
@@ -28,6 +28,15 @@ __ __
 <br>
 
 # Updates
+
+> 08/24/23
+- Re-worked the handling of the encrypted data so it will be stored locally, instead of having to trust the security of another platform. This will also allow you to use larger files like 100kb+ for example, and not be impacted by slow compile times or slow obfuscation times. (hopefully)
+- Changed the obfuscation method from Hyperion to Specter.
+__ __
+
+<br>
+<br>
+
 > 08/06/23
 - In the event of polylock not being able to make a request to pastebin, it will default to writing to local file instead.
 - Added a spinner to take up empty space when validating pastebin user keys. (To give you something to look at...like a loading bar, etc.)
@@ -81,10 +90,19 @@ __ __
 <br>
 <br>
 
+# Extra Info
+The `setup.py` file is used by PolyLock to cythonize the `part.py` file that will be created that stores the encrypted data of the file you have given polylock. "`part.py`" will either be a .so file or .pyd file..depending on if you use Linux/Mac or Windows. You WILL need that .so/.pyd file along side of your original/now modified file, otherwise nothing will happen or you will get an error.
+
+Specter can be used by itself if you want to use it instead of polylock, but let it be known that it is for obfuscation and does not aim to be both encryption and obfuscation, etc. It also doesn't really like to handle large files (anything over 70kb-80kb in file size).
+__ __
+
+<br>
+<br>
+
 # ⚠️ Warning & disclaimer
 I have not tested ANY of the code on a windows system so I have no idea what works and what doesn't..(yet). If you are using windows then please feel free to test it out and get back to me with any issues that occur by making an [issue](https://github.com/therealOri/PolyLock/issues/new/choose) report. Please and thanks!
 
-I shall not be held liable or be punishable on or off platforms for what users do with this code and or what code they obfuscate, etc. This code was made for the intended purpose of keeping code personal, safe, and secure. Not really any different than normal file/data encryption.
+Also! I shall not be held liable or be punishable on or off ANY platforms for what users do with this code and or what code they obfuscate, etc. This code was made for the intended purpose of keeping code personal, safe, and secure. Not really any different than normal file/data encryption.
 __ __
 
 <br />
