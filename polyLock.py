@@ -290,7 +290,7 @@ try:
     key = base64.b64decode(key_0)
 except Exception:
     chaes.clear()
-    print("Unable to unlock file.")
+    print("Invalid key, unable to continue...")
     sys.exit()
 
 try:
