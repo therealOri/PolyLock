@@ -1,17 +1,18 @@
 # Imports
 import os
 import sys
-import beaupy
+import lzma
 import base64
+import beaupy
 import random
 import shutil
+import binascii
 import requests
 import subprocess
 from Chaeslib import Chaes
 from beaupy.spinners import *
 from pystyle import Colors, Colorate
-import binascii
-import lzma
+
 
 
 # Helper Functions
