@@ -1,5 +1,5 @@
 # About
-PolyLock is a python3 code obfuscator and encryptor, helping you keep your code secure/safe and still runable/executable.
+PolyLock is a new and advanced python3 code obfuscator and encryptor, helping you keep your code secure/safe and still runable/executable.
 
 
 - Encryption is handled with [Chaeslib](https://pypi.org/project/Chaeslib/)
