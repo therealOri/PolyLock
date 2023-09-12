@@ -42,8 +42,16 @@ def banner():
 
 
 def compile_code(file_path):
-    result_code = subprocess.run(['nuitka3', '--version'])
-    if result_code.returncode != 0:
+    if sys.platform == 'win32':
+        platform_command = ['cmd.exe', '/c', 'nuitka', '--version']
+        system_args = ['cmd.exe', '/c', 'nuitka', '--follow-imports', file_path]
+    else:
+        platform_command = ['nuitka3', '--version']
+        system_args = ['nuitka3', '--follow-imports', file_path]
+
+    try:
+        result_code = subprocess.run(platform_command) #check to see if nuitka is installed.
+    except:
         try:
             subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'nuitka'])
         except Exception as e:
@@ -53,24 +61,7 @@ def compile_code(file_path):
             exit()
 
     clear()
-    if beaupy.confirm("Want to add an icon?"):
-        icon_file = beaupy.prompt("Path to the picture you want to use as an icon.")
-        if not icon_file:
-            icon_arg = ''
-        icon_file = icon_file.replace('\\', '').strip()
-        if sys.platform == 'win32':
-            icon_arg = '--windows-icon-from-ico=%s' % icon_file
-        elif sys.platform == 'linux':
-            icon_arg = '--linux-icon=%s' % icon_file
-        elif sys.platform == 'darwin':
-            icon_arg = '--macos-app-icon=%s' % icon_file
-        else:
-            icon_arg = ''
-
-        args = ['nuitka3', '--follow-imports', icon_arg, file_path]
-    else:
-        args = ['nuitka3', '--follow-imports', file_path]
-
+    args = system_args
     subprocess.check_call(args)
 
 
