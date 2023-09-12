@@ -28,6 +28,13 @@ __ __
 <br>
 
 # Updates
+> 09/12/23
+- Added a windows compatibility patch for the `compile_code()` function.
+- Removed option for whether or not to add an icon to the compiled executable.
+__ __
+
+<br>
+<br>
 
 > 08/24/23
 - Re-worked the handling of the encrypted data so it will be stored locally, instead of having to trust the security of another platform. This will also allow you to use larger files like 100kb+ for example, and not be impacted by slow compile times or slow obfuscation times. (hopefully)
