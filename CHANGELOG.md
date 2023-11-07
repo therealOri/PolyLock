@@ -4,7 +4,7 @@
 <br>
 <br>
 
-🎃 (Latest) 🎃
+❄️ (Latest) ❄️
 > 09/12/23
 - Added a windows compatibility patch for the `compile_code()` function.
 - Removed option for whether or not to add an icon to the compiled executable.
