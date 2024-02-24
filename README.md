@@ -18,7 +18,7 @@ __ __
 <br>
 
 # Flowchart
-![polylock_diagram](https://github.com/therealOri/PolyLock/assets/45724082/4e484bdb-22b9-438b-81a5-0e0b1b6bdfdf)
+(W.I.P)
 > Dev note;
 >
 > This is my first time making a flow chart/diagram, It may not be pretty or the best but hopefully it's at the very minimum understandable.
@@ -33,10 +33,14 @@ The full list of changes can be found in the [Changelog.md](https://github.com/t
 <br>
 
 (Latest)
-> 09/12/23
-- Added a windows compatibility patch for the `compile_code()` function.
-- Removed option for whether or not to add an icon to the compiled executable.
+> 02/24/24
 
+In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now need to make a [fine-grained github access token](#tokens). And you will need to have `curl` and `wget` installed. In regards to evrything else in the code, it's pretty much the same in terms of flow and what not.
+
+Changes;
+- Moved from pastebin to github/git.
+- Added another layer of fun to the final file/result using 'polybin'. I'm sure a laugh or two to will be had.
+- Removed the use of setup.py and the "part" files. So now everything is in one file instead of multiple files.
 __ __
 
 <br>
@@ -67,10 +71,25 @@ __ __
 <br>
 <br>
 
-# Extra Info
-The `setup.py` file is used by PolyLock to cythonize the `part.py` file that will be created that stores the encrypted data of the file you have given polylock. "`part.py`" will either be a .so file or .pyd file..depending on if you use Linux/Mac or Windows. You WILL need that .so/.pyd file along side of your original/now modified file, otherwise nothing will happen or you will get an error.
+## Github fine-grained tokens {#tokens}
+For this new version of polylock, because we are using github, you will need to make yourself a token. Below I will show you the steps you need to take to make th etoken and what scopes/permissions it should have.
+> Note: __DO NOT SHARE YOUR ACCESS TOKENS WITH ANYONE.__
 
-Specter can be used by itself if you want to use it instead of polylock, but let it be known that it is for obfuscation and does not aim to be both encryption and obfuscation, etc. It also doesn't really like to handle large files (anything over 70kb-80kb in file size).
+To get started you shall do the following;
+- Go to your `user settings` and scroll down to `"Developer Settings"`, click it.
+- Expand "Personal Access Tokens".
+- Click "Fine-grained tokens".
+- Click "generate new token".
+- Give the token a name, an expiration date, and description.
+- __Set "Repository Access" to "All Repositories".__
+- Set the following `repository permissions` to "Read & Write" - (`Administrator, Contents`) [metadata is on by default]
+  > `Account permissions` should NOT be touched. `Leave alone`.
+- Click "Generate token" button and then copy the token and `save the token` somewhere secure/safe.
+  > (You will need this to interact with the github api, make repositories, and update repositories.
+
+<br>
+
+Also, `Specter` can be used by itself if you want to use it instead of polylock, but let it be known that it is for obfuscation and does not aim to be both encryption and obfuscation, etc. It also doesn't really like to handle large files (anything over 70kb-80kb in file size).
 __ __
 
 <br>
