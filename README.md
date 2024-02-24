@@ -35,7 +35,7 @@ The full list of changes can be found in the [Changelog.md](https://github.com/t
 (Latest)
 > 02/24/24
 
-In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now need to make a [fine-grained github access token]({#heading}). And you will need to have `curl` and `wget` installed. In regards to evrything else in the code, it's pretty much the same in terms of flow and what not.
+In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now need to make a [fine-grained github access token](https://github.com/therealOri/PolyLock/blob/main/README.md#github-fine-grained-tokens). And you will need to have `curl` and `wget` installed. In regards to evrything else in the code, it's pretty much the same in terms of flow and what not.
 
 Changes;
 - Moved from pastebin to github/git.
