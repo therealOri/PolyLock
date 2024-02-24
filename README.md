@@ -18,7 +18,8 @@ __ __
 <br>
 
 # Flowchart
-(W.I.P)
+![PolyLock_New_flowchart](https://github.com/therealOri/PolyLock/assets/45724082/15d3772f-0fa0-4feb-a6e9-d267623b7658)
+
 > Dev note;
 >
 > This is my first time making a flow chart/diagram, It may not be pretty or the best but hopefully it's at the very minimum understandable.
