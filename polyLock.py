@@ -1,23 +1,57 @@
 # Imports
 import os
+import re
 import sys
-import lzma
-import base64
 import beaupy
+import base64
 import random
 import shutil
-import binascii
 import requests
 import subprocess
 from Chaeslib import Chaes
 from beaupy.spinners import *
 from pystyle import Colors, Colorate
+import binascii
+import lzma
+import json
+import time
 
 
 
-# Helper Functions
+
+
 def clear():
     os.system("clear||cls")
+
+
+
+tools = ['curl', 'wget']
+for tool in tools:
+    try:
+        subprocess.check_output([tool, '--version'])
+    except OSError:
+        clear()
+        input(f'{tool} not found, please install {tool} and then try again.\n\nPlease press "enter" to exit...')
+        clear()
+        quit()
+
+
+
+try:
+    from polybin import *
+except:
+    print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...\n)")
+    subprocess.check_call(['wget', 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.so'])
+    try:
+        from polybin import *
+    except:
+        clear()
+        input('Unable to install/download "polybin", you will need to download it manually, place it in the same place as "polyLock", and then try again.\nYou can find it here: https://github.com/therealOri/PolyLock\n\n\nPlease press "enter" to exit...')
+        clear()
+        quit()
+
+
+
 
 
 def banner():
@@ -67,69 +101,6 @@ def compile_code(file_path):
 
 
 
-def check_pastebin_key(dev_key, user_key):
-    spinner = Spinner(ARC, "Validating user_key...")
-    spinner.start()
-    url = 'https://pastebin.com/api/api_post.php'
-    data = {
-        'api_dev_key': dev_key,
-        'api_user_key': user_key,
-        'api_option': 'paste',
-        'api_paste_code': 'user_key_validation_test',
-        'api_paste_name': 'user_key_validation_test'
-    }
-
-    response = requests.post(url, data=data)
-    if response.status_code == 200:
-        valid = True
-        paste_key = response.text
-        paste_code_id = paste_key.split('/')[-1]
-    else:
-        valid = False
-
-
-    if valid == True:
-        data = {
-            'api_dev_key': dev_key,
-            'api_user_key': user_key,
-            'api_option': 'delete',
-            'api_paste_key': paste_code_id
-        }
-        requests.post(url, data=data)
-
-    spinner.stop()
-    return valid, response
-
-
-
-
-def pastebin_login(api_dev_key):
-    print('Please login to your account using your username and password.  |  Why do you need to login?: https://pastebin.com/doc_api#9\n\n')
-    pbin_username = beaupy.prompt("Pastebin Username.", secure=True)
-    pbin_password = beaupy.prompt("Pastebin Password.", secure=True)
-
-    api_data_pkg = {'api_dev_key':api_dev_key,
-            'api_user_name':pbin_username,
-            'api_user_password':pbin_password
-    }
-    response = requests.post('https://pastebin.com/api/api_login.php', data=api_data_pkg)
-    api_user_key = response.text
-    if response.status_code == 200:
-        clear()
-        input(f'Pastebin User Key - (Save me & Do not share): "{api_user_key}"\n\nPress "enter" to contine...')
-        clear()
-        return api_user_key
-    else:
-        clear()
-        input(f'Unable to login...\nError code: "{api_user_key.status_code}"\nPosting paste as guest instead.\n\nPress "enter" to contine...')
-        clear()
-        api_user_key=''
-        return api_user_key
-
-
-
-
-
 def check_file(file_path):
     if not os.path.exists(file_path):
         return False
@@ -151,32 +122,28 @@ full_stuff_bytes = full_stuff.encode()
 more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
 exec(more_stuff)
 '''
-    with open(file_path, 'w') as wf:
-        wf.write(code2)
+
+    awrgas = palkjkhfviy(code2)
+    code2_2 = f"""from polybin import *
+sgfiydu = "{awrgas}"
+ugsjdkfoug = jhftdjhgd(sgfiydu)
+
+exec(ugsjdkfoug)
+"""
+    with open(file_path, 'w') as fw:
+        fw.write(code2_2)
 
 
 
-def clean_up(file_name):
-    clear()
-    cleaning_spinner = Spinner(ARC, "Cleaning Up...")
-    cleaning_spinner.start()
-    os.remove(f'{file_name}.py')
-    os.remove(f'{file_name}.c')
-    shutil.rmtree('build')
 
-    if sys.platform == 'win32':
-        ext = '.pyd'
-    else:
-        ext = '.so'
 
-    for filename in os.listdir('.'): # current directory/folder
-        if not filename.endswith(ext):
-            pass
-        else:
-            new_name = f'{file_name}{ext}'
-            os.rename(filename, new_name)
-            break
-    cleaning_spinner.stop()
+def validate_github_user(git_name):
+    url = f"https://api.github.com/users/{git_name}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return 200
+    elif response.status_code == 404:
+        return 404
 
 
 
@@ -222,47 +189,15 @@ def main():
             enc_stuff.append(f"{chunk}")
 
 
-        file_name='part.py'
-        if os.path.isfile(file_name):
-            count = 1
-            while True:
-                file_name = f'part_{count}.py'
-                if os.path.isfile(file_name):
-                    count += 1
-                    continue
-                else:
-                    break
-
-
-        with open(file_name, 'w') as fw:
-            code_part = f'''locked_data = "{enc_stuff}"'''
-            fw.write(code_part)
-
-        with open('setup.py', 'w') as fws:
-            setup_code=f'''from distutils.core import setup
-from Cython.Build import cythonize
-
-setup(
-    ext_modules = cythonize("{file_name}")
-)
-'''
-            fws.write(setup_code)
-
-        base_file_name = os.path.splitext(file_name)[0]
-        subprocess.check_call([sys.executable, 'setup.py', 'build_ext', '--inplace'])
-
 
         code = f'''import base64
 from Chaeslib import Chaes
 import beaupy
 import sys
 import ast
-import {base_file_name}
 
 
-data = {base_file_name}.locked_data
-data_lst = ast.literal_eval(data)
-built_stuff = "".join(data_lst)
+splt_enc_stff = {enc_stuff}
 
 chaes = Chaes()
 chaes.clear()
@@ -272,7 +207,8 @@ if not dKey:
     sys.exit()
 
 try:
-    enc_data = chaes.hex_to_base64(built_stuff)
+    enc_stuff = "".join(splt_enc_stff)
+    enc_data = chaes.hex_to_base64(enc_stuff)
     json_input = base64.b64decode(enc_data)
     key_and_salt = dKey.split(":")
     salt_1 = key_and_salt[1]
@@ -296,11 +232,11 @@ chaes.clear()
 exec(unlocked_data)
 '''
 
-        with open(file_path, 'w') as wf:
-            wf.write(code)
+        with open(file_path, 'w') as fw:
+            fw.write(code)
 
-        clean_up(base_file_name)
         clear()
+        print("Note: (WIP - May break or throw errors. Make sure to have a backup of your original saved before obfuscating in case you need to restart/try again.)\n")
         if beaupy.confirm("Do you want to obfuscate code?"):
             try:
                 subprocess.check_call([sys.executable, 'specter.py'])
@@ -313,25 +249,7 @@ exec(unlocked_data)
 
         clear()
         #gotta love adding logic :')
-        if beaupy.confirm("Do you want to use pastebin for storage?"):
-            api_dev_key = beaupy.prompt('Pastebin DEV key.')
-
-            if beaupy.confirm("Want to post to YOUR pastebin account?"):
-                if beaupy.confirm("(!Warning!) - If you generate a new key, your old key will no longer be valid.\nDo you already have your pastebin USER key?\n\n"):
-                    api_user_key = beaupy.prompt("Pastebin USER key.")
-
-                    check = check_pastebin_key(api_dev_key, api_user_key)
-                    if check[0] == False:
-                        print(f"An error has occured...\nError: {check[1].text}  | Code: {check[1].status_code}")
-                        api_user_key = pastebin_login(api_dev_key)
-                else:
-                    api_user_key = pastebin_login(api_dev_key)
-            else:
-                api_user_key=''
-                #post to pastebin as guest
-
-
-
+        if beaupy.confirm("Do you want to use github for storage?"):
             chunk_size = 128
             with open(file_path, 'rb') as rb:
                 obf_code = rb.read()
@@ -342,83 +260,152 @@ exec(unlocked_data)
             for i, chunk in enumerate(chunks):
                 stuff.append(f"{chunk.decode()}")
 
-            stuff = f'{stuff}'
-            N = 2
-            part_size = len(stuff) // N
-            parts = []
 
-            for i in range(N):
-                start = i * part_size
-                end = (i+1) * part_size if i < N-1 else len(stuff)
-                parts.append(stuff[start:end])
-
-            # Upload each part and get paste IDs
             letters = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
             digits = "012345678901234567890123456789"
-            paste_names = [''.join(random.choices(letters + digits, k=10)) for i in range(5)]
-            paste_ids = []
+            file_name = ''.join(random.choices(letters + digits, k=10)) #k = length
+            new_repo_name = ''.join(random.choices(letters + digits, k=10))
 
-            paste_spinner = Spinner(ARC, "Storing code in pastebin...")
-            paste_spinner.start()
-            for part, name in zip(parts, paste_names):
-                api_data = {'api_dev_key':api_dev_key,
-                        'api_option':'paste',
-                        'api_user_key':api_user_key,
-                        'api_paste_code':part,
-                        'api_paste_name': name
-                }
-                response = requests.post('https://pastebin.com/api/api_post.php', data=api_data)
-                paste_ids.append(response.text.split('/')[-1])
+            with open(f"{file_name}.txt", 'w') as tmpw:
+                tmpw.write(f"{stuff}")
 
 
+            while True:
+                github_username = beaupy.prompt("Your github username - (Example: therealOri)")
+                if not github_username:
+                    clear()
+                    input('Username can NOT be an empty string or None.\n\nPress "enter" to try again...')
+                    clear()
+                    continue
 
+                valid = validate_github_user(github_username)
+                if valid == 404:
+                    clear()
+                    input('Invalid Username provided.\n\nPress "enter" to try again...')
+                    clear()
+                    continue
+                else:
+                    break
+
+
+            while True:
+                access_token = beaupy.prompt("GitHub Fine-Grained Access Token", secure=True)
+                if not github_username:
+                    clear()
+                    input('access_token can NOT be an empty string or None.\n\nPress "enter" to try again...')
+                    clear()
+                    continue
+                else:
+                    break
+            f=None
+            if beaupy.confirm("Do you want to have a repository made for you? - (If you don't have a repository made already)"):
+                f=True
+                print("Creating Repository...")
+                time.sleep(2.5)
+                data = {"name":f"{new_repo_name}"}
+                json_data = json.dumps(data)
+                subprocess.check_call(['curl', '-s', '-H', f'Authorization: token {access_token}', '-d', json_data, 'https://api.github.com/user/repos'])
+                remote_url = f"https://{access_token}@github.com/{github_username}/{new_repo_name}.git"
+                subprocess.check_call(["git", "init"])
+                subprocess.check_call(["git", "add", f"{file_name}.txt"])
+                subprocess.check_call(["git", "commit", "-m", "Add file"])
+                subprocess.check_call(["git", "remote", "add", "origin", remote_url])
+                subprocess.check_call(["git", "push", "origin", "master"])
+                shutil.rmtree(".git/")
+                os.remove(f'{file_name}.txt')
+                input(f'[+] Done! [+]\nCheck it out here: https://github.com/{github_username}/{new_repo_name}\n\nPress "enter" to continue...')
+                clear()
+            else:
+                f=False
+                while True:
+                    repo_url = beaupy.prompt("Repository URL - (Example: https://github.com/therealOri/PolyFiles)")
+                    match = re.search(r"github\.com/[^/]+/([^/]+)/?", repo_url)
+                    if match:
+                        existing_repo_name = match.group(1)
+                        clear()
+                        break
+                    else:
+                        clear()
+                        input('Invalid URL provided.\n\nPress "enter" to try again...')
+                        clear()
+                        continue
+
+                print(f"Updating {repo_url}...")
+                time.sleep(2.5)
+                remote_url = f"https://{access_token}@github.com/{github_username}/{existing_repo_name}.git"
+                subprocess.check_call(['git', 'clone', repo_url])
+                shutil.move(f'{file_name}.txt', f'{existing_repo_name}/')
+                os.chdir(f'{existing_repo_name}')
+                subprocess.check_call(["git", "add", f"{file_name}.txt"])
+                subprocess.check_call(["git", "commit", "-m", "Add file"])
+                subprocess.check_call(["git", "remote", "set-url", "origin", remote_url])
+                subprocess.check_call(["git", "push", "origin", "master"])
+                os.chdir('../')
+                shutil.rmtree(f"{existing_repo_name}/")
+                input(f'[+] Done! [+]\nQuick Access: https://github.com/{github_username}/{existing_repo_name}\n\nPress "enter" to continue...')
+                clear()
+
+
+            if f == True:
+                repo_name = new_repo_name
+            else:
+                repo_name = existing_repo_name
             code2 = f'''import binascii
-import requests
 import ast
 from beaupy.spinners import *
+import requests
+import os
 
-part_url_1 = 'https://pastebin.com/raw/{paste_ids[0]}'
-part_url_2 = 'https://pastebin.com/raw/{paste_ids[1]}'
+
+def clear():
+    os.system("clear||cls")
 
 
+clear()
 spinner = Spinner(ARC, "Building code...")
 spinner.start()
 try:
-    full_stuff = ""
-    for url in [part_url_1, part_url_2]:
-        response = requests.get(url)
-        status_code = response.status_code
+    url = "https://raw.githubusercontent.com/{github_username}/{repo_name}/master/{file_name}.txt"
+    response = requests.get(url)
+    if response.status_code == 404:
+        spinner.stop()
+        clear()
+        print("Repository trying to be reached is set to private!")
+        raise Exception("Unable to read private repository.")
+        quit()
+    else:
+        full_stuff = requests.get("https://raw.githubusercontent.com/{github_username}/{repo_name}/master/{file_name}.txt")
 
-        if status_code == 200:
-            full_stuff += response.text
-        else:
-            spinner.stop()
-            quit(f"Error fetching {{url}} | Status: {{response.status_code}}")
+    if full_stuff.status_code == 200:
+        full_stuff_lst = ast.literal_eval(full_stuff.text)
+        full_stuff = "".join(full_stuff_lst)
+        full_stuff_bytes = full_stuff.encode()
+        more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
 
-
-    full_stuff_lst = ast.literal_eval(full_stuff)
-    full_stuff = "".join(full_stuff_lst)
-    full_stuff_bytes = full_stuff.encode()
-    more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
-
-    spinner.stop()
-    exec(more_stuff)
+        spinner.stop()
+        clear()
+        exec(more_stuff)
+    else:
+        spinner.stop()
+        clear()
+        quit("Unable to get and or read file data from repository...")
 
 except Exception as e:
     spinner.stop()
+    clear()
     print(f"Error with request: {{e}}")
+    print("You will need to re obfuscate the code/try again...")
 '''
 
-            if response.status_code == 200:
-                with open(file_path, 'w') as wf:
-                    wf.write(code2)
-                paste_spinner.stop()
-            else:
-                paste_spinner.stop()
-                clear()
-                input(f'Unable to make a request to pastebin with error: [{response.text}  |  {response.status_code}], defaulting to writing to file instead.\n\nPress "enter" to continue...')
-                clear()
-                local_store(stuff, file_path)
+            awrgas = palkjkhfviy(code2)
+            code2_2 = f"""from polybin import *
+sgfiydu = "{awrgas}"
+ugsjdkfoug = jhftdjhgd(sgfiydu)
+
+exec(ugsjdkfoug)
+"""
+            with open(file_path, 'w') as fw:
+                fw.write(code2_2)
 
         else:
             chunk_size = 128
@@ -433,8 +420,13 @@ except Exception as e:
             local_store(stuff, file_path)
 
 
+        clear()
         if beaupy.confirm("Do you want to compile the code to an executable?"):
             compile_code(file_path)
+            file_name = os.path.basename(file_path)
+            name_without_ext = os.path.splitext(file_name)[0]
+            shutil.rmtree(f"{name_without_ext}.build")
+            os.remove(file_path)
             clear()
             input('Code has been successfully locked, obfuscated, and compiled to an executable/binary.\n\nPress "enter" to continue/exit...')
             clear()
