@@ -9,7 +9,7 @@ PolyLock is a new and advanced python3 code obfuscator and encryptor, helping yo
 - Code compilation is handled by [Nuitka](https://github.com/Nuitka/Nuitka/).
 
 
-You can provide any .py file you like, PolyLock will then encrypt the file's data and then obfuscate it. You will then be asked if you want to compile the .py to an executable and if you say yes, you will be left with either an executable binary or a windows .exe file. Making sure your code is secure and obfuscated. You can also allow the ussage of pastebin to store parts of the obfuscated code, keeping the final result small.
+You can provide any .py file you like, PolyLock will then encrypt the file's data and then obfuscate it. You will then be asked if you want to compile the .py to an executable and if you say yes, you will be left with either an executable binary or a windows .exe file. Making sure your code is secure and obfuscated. You can also allow the ussage of github to store parts of the obfuscated code, keeping the final result small.
 
 <br>
 <br>
@@ -39,7 +39,7 @@ The full list of changes can be found in the [Changelog.md](https://github.com/t
 (Latest)
 > 02/24/24
 
-In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now need to make a [fine-grained github access token](https://github.com/therealOri/PolyLock?tab=readme-ov-file#github-fine-grained-tokens). And you will need to have `curl` and `wget` installed. In regards to evrything else in the code, it's pretty much the same in terms of flow and what not.
+In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now be able to have it make a repository for you or provide a link/url to a repository instead so it can save files to it and later on use. To do this, you will need to make a [fine-grained github access token](https://github.com/therealOri/PolyLock?tab=readme-ov-file#github-fine-grained-tokens), as that is what will make all of this possible. You will also need to have `curl` and `wget` installed. In regards to evrything else in the code, it's pretty much the same in terms of flow and what not.
 
 Changes;
 - Moved from pastebin to github/git.
