@@ -99,6 +99,14 @@ __ __
 <br>
 <br>
 
+# ToDo
+Here you can find my plans on what I would like to do and or future ideas.
+  - Add more layers. (Can never be TOO much like an onion.)
+__ __
+
+<br>
+<br>
+
 # ⚠️ Warning & disclaimer
 I have not tested ANY of the code on a windows system so I have no idea what works and what doesn't..(yet). If you are using windows then please feel free to test it out and get back to me with any issues that occur by making an [issue](https://github.com/therealOri/PolyLock/issues/new/choose) report. Please and thanks!
 
