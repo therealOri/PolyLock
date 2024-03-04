@@ -76,7 +76,7 @@ __ __
 <br>
 
 # Github fine-grained tokens
-For this new version of polylock, because we are using github, you will need to make yourself a token. Below I will show you the steps you need to take to make th etoken and what scopes/permissions it should have.
+For this new version of polylock, because we are using github, you will need to make yourself a token. Below I will show you the steps you need to take to make the token and what scopes/permissions it should have.
 > Note: __DO NOT SHARE YOUR ACCESS TOKENS WITH ANYONE.__
 
 To get started you shall do the following;
