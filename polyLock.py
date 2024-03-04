@@ -4,7 +4,7 @@ import re
 import sys
 import beaupy
 import base64
-import random
+import random # for generating names, not for anything involving encryption.
 import shutil
 import requests
 import subprocess
@@ -25,7 +25,7 @@ def clear():
 
 
 
-tools = ['curl', 'wget']
+tools = ['curl', 'wget', 'git']
 for tool in tools:
     try:
         subprocess.check_output([tool, '--version'])
