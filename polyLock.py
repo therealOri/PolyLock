@@ -24,7 +24,6 @@ def clear():
     os.system("clear||cls")
 
 
-
 tools = ['curl', 'wget', 'git']
 for tool in tools:
     try:
@@ -34,6 +33,7 @@ for tool in tools:
         input(f'{tool} not found, please install {tool} and then try again.\n\nPlease press "enter" to exit...')
         clear()
         quit()
+
 
 
 
@@ -49,6 +49,8 @@ if not os.path.exists('polybin.so'):
         quit()
 else:
     from polybin import *
+
+
 
 
 
@@ -112,6 +114,11 @@ def check_file(file_path):
 
 
 
+
+
+
+
+
 def local_store(stuff, file_path):
     code2 = f'''import binascii
 
@@ -123,10 +130,10 @@ more_stuff = binascii.unhexlify(full_stuff_bytes).decode()
 exec(more_stuff)
 '''
 
-    awrgas = palkjkhfviy(code2)
+    awrgas = dbvcfautrfuaiyu(code2)
     code2_2 = f"""from polybin import *
 sgfiydu = "{awrgas}"
-ugsjdkfoug = jhftdjhgd(sgfiydu)
+ugsjdkfoug = iuiyiavfaapi(sgfiydu)
 
 exec(ugsjdkfoug)
 """
@@ -397,10 +404,10 @@ except Exception as e:
     print("You will need to re obfuscate the code/try again...")
 '''
 
-            awrgas = palkjkhfviy(code2)
+            awrgas = dbvcfautrfuaiyu(code2)
             code2_2 = f"""from polybin import *
 sgfiydu = "{awrgas}"
-ugsjdkfoug = jhftdjhgd(sgfiydu)
+ugsjdkfoug = iuiyiavfaapi(sgfiydu)
 
 exec(ugsjdkfoug)
 """
