@@ -16,7 +16,7 @@ You can provide any .py file you like, PolyLock will then encrypt the file's dat
 
 If you like what I have made, please leave a star! :star: and share this project with your friends and communities!
 __ __
-> Note: Loading/execution times may vary depending on how large the file is that's going to be obfuscated. And Specter sometimes likes to spit out an error and nor run properly so you may need to re obfuscate/try again if this happens.
+> Note: Loading/execution times may vary depending on how large the file is that's going to be obfuscated. And Specter sometimes likes to spit out an error and not run properly so you may need to re obfuscate/try again if this happens.
 
 
 <br>
