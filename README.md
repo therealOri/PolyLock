@@ -112,6 +112,7 @@ __ __
 # ToDo
 Here you can find my plans on what I would like to do and or future ideas.
   - Add more layers. (Can never be TOO much like an onion.)
+  - Use something better than Specter/Hyperion.
 __ __
 
 <br>
