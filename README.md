@@ -69,7 +69,7 @@ python polyLock.py
 ```
 > If you don't have `virtualenv`, you can install it via "pip". `pip install virtualenv`.
 
-> Note: If you are using windows, you can delete the `polybin.so` file. If you are not using windows, you can delete the `polybin.pyd` file.
+> Note: If you are using windows, may need to delete or move the `polybin.so` file. If you are not using windows, you may need to delete or move the `polybin.pyd` file.
 __ __
 
 <br>
