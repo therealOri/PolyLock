@@ -15,6 +15,7 @@ import binascii
 import lzma
 import json
 import time
+import wget
 
 
 
@@ -24,10 +25,14 @@ def clear():
     os.system("clear||cls")
 
 
-tools = ['curl', 'wget', 'git']
+tools = ['curl', 'git']
 for tool in tools:
     try:
-        subprocess.check_output([tool, '--version'])
+        if sys.platform == 'win32':
+            platform_command = ['cmd', '/c', f'{tool}', '--version']
+        else:
+            platform_command = [f'{tool}', '--version']
+        subprocess.check_output(platform_command)
     except OSError:
         clear()
         input(f'{tool} not found, please install {tool} and then try again.\n\nPlease press "enter" to exit...')
@@ -35,12 +40,14 @@ for tool in tools:
         quit()
 
 
+libs = {'polybin.so': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.so', 'polybin.pyd': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.pyd'}
+lib_file = 'polybin.so' if sys.platform != 'win32' else 'polybin.pyd'
+lib_url = libs[lib_file]
 
-
-if not os.path.exists('polybin.so'):
+if not os.path.exists(lib_file):
     try:
         print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...)\n")
-        subprocess.check_call(['wget', 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.so'])
+        wget.download(lib_url)
         from polybin import *
     except:
         clear()
@@ -167,7 +174,7 @@ def main():
     check = check_file(file_path)
     if check == False:
         clear()
-        exit(msg="Invalid file type or file doesn't exist...")
+        exit("Invalid file type or file doesn't exist...")
     else:
         chaes = Chaes()
         key_data = input("Data for key gen - (100+ random characters): ").encode()
