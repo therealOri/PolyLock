@@ -4,6 +4,27 @@
 <br>
 <br>
 
+(p2)
+> 04/24/24
+
+Updated polybin to have more layers. Also updated the example files and main file accordingly to work with this update.
+__ __
+
+<br>
+
+(p1)
+> 02/24/24
+
+In this update We fully move away from pastebin (and their small file size limit restrictions), and instead move the storage of some code to github. With these changes you will now be able to have it make a repository for you or provide a link/url to a repository instead so it can save files to it and later on use. To do this, you will need to make a [fine-grained github access token](https://github.com/therealOri/PolyLock?tab=readme-ov-file#github-fine-grained-tokens), as that is what will make all of this possible. You will also need to have `curl` and `wget` installed. In regards to everything else in the code, it's pretty much the same in terms of flow and what not.
+
+Changes;
+- Moved from pastebin to github/git.
+- Added another layer of fun to the final file/result using 'polybin'. I'm sure a laugh or two to will be had.
+- Removed the use of setup.py and the "part" files. So now everything is in one file instead of multiple files.
+__ __
+
+<br>
+<br>
 
 > 09/12/23
 - Added a windows compatibility patch for the `compile_code()` function.
