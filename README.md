@@ -93,10 +93,6 @@ To get started you shall do the following;
   > `Account permissions` should NOT be touched. `Leave alone`.
 - Click "Generate token" button and then copy the token and `save the token` somewhere secure/safe.
   > (You will need this to interact with the github api, make repositories, and update repositories.
-
-<br>
-
-Also, `Specter` can be used by itself if you want to use it instead of polylock, but let it be known that it is for obfuscation and does not aim to be both encryption and obfuscation, etc. It also doesn't really like to handle large files (anything over 70kb-80kb in file size).
 __ __
 
 <br>
