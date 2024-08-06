@@ -58,6 +58,15 @@ else:
 
 
 
+try:
+    subprocess.check_call(["pydelta-obfuscate", "--help"])
+except:
+    #assuming we are in the right env.
+    subprocess.check_call(["git", "clone", "https://github.com/therealOri/PyDelta-PythonObfuscator.git"])
+    os.chdir('PyDelta-PythonObfuscator/')
+    subprocess.check_call(["pip", "install", '.'])
+    os.chdir('../')
+
 
 
 
@@ -310,7 +319,7 @@ exec(unlocked_data)
                 clear()
                 banner()
                 access_token = beaupy.prompt("GitHub Fine-Grained Access Token", secure=True)
-                if not github_username:
+                if not access_token:
                     clear()
                     input('access_token can NOT be an empty string or None.\n\nPress "enter" to try again...')
                     clear()
