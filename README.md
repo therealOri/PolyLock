@@ -44,6 +44,7 @@ The full list of changes can be found in the [Changelog.md](https://github.com/t
 - Created a windows specific lib `.pyd` instead of using a `.so` file. Importing should be fixed.
 - Changed random to use pycryptodome's randomness.
 - Updated the tui to show the banner more consistently.
+- Now using pydelta for obfuscation.
 
 __ __
 
