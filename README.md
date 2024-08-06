@@ -4,7 +4,7 @@ PolyLock is a new and advanced python3 code obfuscator and encryptor, helping yo
 
 - Encryption is handled with [Chaeslib](https://pypi.org/project/Chaeslib/)
 
-- Obfscation is handled by my fork of [Specter](https://github.com/therealOri/Specter/)
+- Obfscation is handled by my fork of [PyDelta](https://github.com/therealOri/PyDelta-PythonObfuscator)
 
 - Code compilation is handled by [Nuitka](https://github.com/Nuitka/Nuitka/).
 
