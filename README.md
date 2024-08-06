@@ -42,6 +42,8 @@ The full list of changes can be found in the [Changelog.md](https://github.com/t
 
 - Removed the check looking for `wget` tool from the command line & instead now using python wget.
 - Created a windows specific lib `.pyd` instead of using a `.so` file. Importing should be fixed.
+- Changed random to use pycryptodome's randomness.
+- Updated the tui to show the banner more consistently.
 
 __ __
 
