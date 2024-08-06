@@ -23,7 +23,7 @@ __ __
 <br>
 
 # Flowchart
-![PolyLock_New_flowchart](https://github.com/therealOri/PolyLock/assets/45724082/15d3772f-0fa0-4feb-a6e9-d267623b7658)
+![polylock_delta](https://github.com/user-attachments/assets/18eecb3d-44ed-44f5-9b5c-1bcc5be675ce)
 
 > Dev note;
 >
