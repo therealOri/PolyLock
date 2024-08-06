@@ -4,7 +4,6 @@ import re
 import sys
 import beaupy
 import base64
-import random # for generating names, not for anything involving encryption.
 import shutil
 import requests
 import subprocess
@@ -16,7 +15,7 @@ import lzma
 import json
 import time
 import wget
-
+from Crypto.Random import random
 
 
 
@@ -87,10 +86,10 @@ def banner():
 def compile_code(file_path):
     if sys.platform == 'win32':
         platform_command = ['cmd.exe', '/c', 'nuitka', '--version']
-        system_args = ['cmd.exe', '/c', 'nuitka', '--follow-imports', file_path]
+        system_args = ['cmd.exe', '/c', 'nuitka', '--follow-imports', '--remove-output', file_path]
     else:
         platform_command = ['nuitka3', '--version']
-        system_args = ['nuitka3', '--follow-imports', file_path]
+        system_args = ['nuitka3', '--follow-imports', '--remove-output', file_path]
 
     try:
         result_code = subprocess.run(platform_command) #check to see if nuitka is installed.
@@ -176,9 +175,10 @@ def main():
         clear()
         exit("Invalid file type or file doesn't exist...")
     else:
+        clear()
+        banner()
         chaes = Chaes()
-        key_data = input("Data for key gen - (100+ random characters): ").encode()
-
+        key_data = beaupy.prompt("Data for key gen - (100+ random characters): ").encode() #ctrl+c will cause an error and exit
         clear()
         eKey = chaes.keygen(key_data)
 
@@ -188,9 +188,9 @@ def main():
         save_me = base64.b64encode(eKey)
         bSalt = base64.b64encode(chaes.salt)
         master_key = f"{save_me.decode()}:{bSalt.decode()}"
-
         input(f'Save this key so you can decrypt later: {master_key}\n\nPress "enter" to contine...')
         clear()
+        banner()
 
         chunk_size = 128
         with open(file_path, 'rb') as rf:
@@ -250,19 +250,21 @@ exec(unlocked_data)
             fw.write(code)
 
         clear()
-        print("Note: (WIP - May break or throw errors. Make sure to have a backup of your original saved before obfuscating in case you need to restart/try again.)\n")
+        banner()
         if beaupy.confirm("Do you want to obfuscate code?"):
             try:
-                subprocess.check_call([sys.executable, 'specter.py'])
+                num = random.randint(50, 100)
+                subprocess.check_call(['pydelta-obfuscate', f'{file_path}', f'{file_path}', '--compress-encrypt-amount', f'{num}'])
             except Exception as e2:
                 clear()
-                input(f'An error has occured while trying to obfuscate code. Something may have gone wrong while obfuscating or running the command "python hyperion.py" using subprocess.\n\nError: {e2}\n\nPress "enter" to exit...')
+                input(f'An error has occured while trying to obfuscate code. Something may have gone wrong while obfuscating or running the "pydelta-obfuscate" command using subprocess.\n\nError: {e2}\n\nPress "enter" to exit...')
                 clear()
                 exit()
 
 
-        clear()
         #gotta love adding logic :')
+        clear()
+        banner()
         if beaupy.confirm("Do you want to use github for storage?"):
             chunk_size = 128
             with open(file_path, 'rb') as rb:
@@ -277,14 +279,16 @@ exec(unlocked_data)
 
             letters = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
             digits = "012345678901234567890123456789"
-            file_name = ''.join(random.choices(letters + digits, k=10)) #k = length
-            new_repo_name = ''.join(random.choices(letters + digits, k=10))
+            file_name = ''.join(random.sample(letters + digits, k=10)) #k = length
+            new_repo_name = ''.join(random.sample(letters + digits, k=10))
 
             with open(f"{file_name}.txt", 'w') as tmpw:
                 tmpw.write(f"{stuff}")
 
 
             while True:
+                clear()
+                banner()
                 github_username = beaupy.prompt("Your github username - (Example: therealOri)")
                 if not github_username:
                     clear()
@@ -303,6 +307,8 @@ exec(unlocked_data)
 
 
             while True:
+                clear()
+                banner()
                 access_token = beaupy.prompt("GitHub Fine-Grained Access Token", secure=True)
                 if not github_username:
                     clear()
@@ -312,6 +318,8 @@ exec(unlocked_data)
                 else:
                     break
             f=None
+            clear()
+            banner()
             if beaupy.confirm("Do you want to have a repository made for you? - (If you don't have a repository made already)"):
                 f=True
                 print("Creating Repository...")
@@ -329,9 +337,12 @@ exec(unlocked_data)
                 os.remove(f'{file_name}.txt')
                 input(f'[+] Done! [+]\nCheck it out here: https://github.com/{github_username}/{new_repo_name}\n\nPress "enter" to continue...')
                 clear()
+                banner()
             else:
                 f=False
                 while True:
+                    clear()
+                    banner()
                     repo_url = beaupy.prompt("Repository URL - (Example: https://github.com/therealOri/PolyFiles)")
                     match = re.search(r"github\.com/[^/]+/([^/]+)/?", repo_url)
                     if match:
@@ -358,6 +369,7 @@ exec(unlocked_data)
                 shutil.rmtree(f"{existing_repo_name}/")
                 input(f'[+] Done! [+]\nQuick Access: https://github.com/{github_username}/{existing_repo_name}\n\nPress "enter" to continue...')
                 clear()
+                banner()
 
 
             if f == True:
@@ -435,11 +447,11 @@ exec(ugsjdkfoug)
 
 
         clear()
+        banner()
         if beaupy.confirm("Do you want to compile the code to an executable?"):
             compile_code(file_path)
             file_name = os.path.basename(file_path)
             name_without_ext = os.path.splitext(file_name)[0]
-            shutil.rmtree(f"{name_without_ext}.build")
             os.remove(file_path)
             clear()
             input('Code has been successfully locked, obfuscated, and compiled to an executable/binary.\n\nPress "enter" to continue/exit...')
