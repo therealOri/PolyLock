@@ -66,6 +66,7 @@ except:
     os.chdir('PyDelta-PythonObfuscator/')
     subprocess.check_call(["pip", "install", '.'])
     os.chdir('../')
+    shutil.rmtree("./PyDelta-PythonObfuscator/")
 
 
 
