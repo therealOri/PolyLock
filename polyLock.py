@@ -39,22 +39,26 @@ for tool in tools:
         quit()
 
 
-libs = {'polybin.so': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.so', 'polybin.pyd': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/polybin.pyd'}
+libs = {'polybin.so': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/libs/polybin.so', 'polybin.pyd': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/libs/polybin.pyd'}
 lib_file = 'polybin.so' if sys.platform != 'win32' else 'polybin.pyd'
 lib_url = libs[lib_file]
 
-if not os.path.exists(lib_file):
+if not os.path.exists(f'./libs/{lib_file}'):
     try:
         print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...)\n")
+        os.chdir('./libs/')
         wget.download(lib_url)
-        from polybin import *
+        os.chdir('../')
     except:
         clear()
         input('Unable to install/download "polybin", you will need to download it manually, place it in the same place as "polyLock", and then try again.\nYou can find it here: https://github.com/therealOri/PolyLock\n\n\nPlease press "enter" to exit...')
         clear()
         quit()
-else:
-    from polybin import *
+
+if not os.path.exists(lib_file):
+    shutil.move(f'libs/{lib_file}', ".")
+
+from polybin import *
 
 
 
