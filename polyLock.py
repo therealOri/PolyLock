@@ -46,11 +46,11 @@ lib_url = libs[lib_file]
 if not os.path.exists(lib_file):
     if not os.path.exists(f'./libs/{lib_file}'):
         try:
-            print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...)\n")
+            print("polybin not found.\nTrying to install polybin...)\n")
             os.chdir('./libs/')
             wget.download(lib_url)
             os.chdir('../')
-            shutil.move(f'libs/{lib_file}', ".")
+            shutil.move(f'./libs/{lib_file}', ".")
         except:
             clear()
             input('Unable to install/download "polybin", you will need to download it manually, place it in the same place as "polyLock", and then try again.\nYou can find it here: https://github.com/therealOri/PolyLock\n\n\nPlease press "enter" to exit...')
