@@ -38,30 +38,31 @@ for tool in tools:
         clear()
         quit()
 
-
 libs = {'polybin.so': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/libs/polybin.so', 'polybin.pyd': 'https://raw.githubusercontent.com/therealOri/PolyLock/master/libs/polybin.pyd'}
 lib_file = 'polybin.so' if sys.platform != 'win32' else 'polybin.pyd'
 lib_url = libs[lib_file]
 
-if not os.path.exists(f'./libs/{lib_file}'):
-    try:
-        print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...)\n")
-        os.chdir('./libs/')
-        wget.download(lib_url)
-        os.chdir('../')
-    except:
-        clear()
-        input('Unable to install/download "polybin", you will need to download it manually, place it in the same place as "polyLock", and then try again.\nYou can find it here: https://github.com/therealOri/PolyLock\n\n\nPlease press "enter" to exit...')
-        clear()
-        quit()
 
 if not os.path.exists(lib_file):
-    shutil.move(f'libs/{lib_file}', ".")
+    if not os.path.exists(f'./libs/{lib_file}'):
+        try:
+            print("Unable to import polybin. (Either not found or not able to be imported.\nTrying to install polybin...)\n")
+            os.chdir('./libs/')
+            wget.download(lib_url)
+            os.chdir('../')
+            shutil.move(f'libs/{lib_file}', ".")
+        except:
+            clear()
+            input('Unable to install/download "polybin", you will need to download it manually, place it in the same place as "polyLock", and then try again.\nYou can find it here: https://github.com/therealOri/PolyLock\n\n\nPlease press "enter" to exit...')
+            clear()
+            quit()
+    else:
+        shutil.move(f'./libs/{lib_file}', ".")
+else:
+    pass #file exists in current dir/folder
+
 
 from polybin import *
-
-
-
 try:
     subprocess.check_call(["pydelta-obfuscate", "--help"])
 except:
