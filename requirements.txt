@@ -4,3 +4,4 @@ pystyle
 nuitka
 requests
 wget
+psutil
