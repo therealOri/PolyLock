@@ -107,9 +107,9 @@ __ __
 <br>
 
 # ⚠️ Warning & disclaimer
-I have not tested ANY of the code on a windows system so I have no idea what works and what doesn't..(yet). If you are using windows then please feel free to test it out and get back to me with any issues that occur by making an [issue](https://github.com/therealOri/PolyLock/issues/new/choose) report. Please and thanks!
+If you have any issues that occur while using PolyLock, then by all means please make an [issue](https://github.com/therealOri/PolyLock/issues/new/choose) report!
 
-Also! I shall not be held liable or be punishable on or off ANY platforms for what users do with this code and or what code they obfuscate, etc. This code was made for the intended purpose of keeping code personal, safe, and secure. Not really any different than normal file/data encryption.
+Also! I shall not be held liable or be punishable on or off ANY platforms for what users do with this code and or what code they obfuscate, "lock", etc. This code was made for the intended purpose of keeping code personal, safe, and secure. Not really any different than normal file/data encryption.
 __ __
 
 <br />
