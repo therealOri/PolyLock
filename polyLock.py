@@ -103,8 +103,8 @@ def compile_code(file_path):
         platform_command = ['cmd.exe', '/c', 'nuitka', '--version']
         system_args = ['cmd.exe', '/c', 'nuitka', '--follow-imports', '--remove-output', file_path]
     else:
-        platform_command = ['nuitka3', '--version']
-        system_args = ['nuitka3', '--follow-imports', '--remove-output', file_path]
+        platform_command = ['nuitka', '--version']
+        system_args = ['nuitka', '--follow-imports', '--remove-output', file_path]
 
     try:
         result_code = subprocess.run(platform_command) #check to see if nuitka is installed.
